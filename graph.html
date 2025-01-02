@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Graph</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <canvas id="graph-canvas" width="500" height="700" style="background-color: whitesmoke;"></canvas>
+
+  <div style="position: absolute; top: 470px; left: 170px;">
+    <button id="pdf-btn" style="width: 150px; height: 50px; background-color: black; color: #b7c916; font-size: 16px; font-weight: bold; border: 2px solid #b7c916;">CLICK FOR PDF</button>
+  </div>
+
+  <script>
+    window.onload = function() {
+      const params = new URLSearchParams(window.location.search);
+      const categoryScores = {
+        AR: Math.min(parseInt(params.get('AR')), 20),
+        CR: Math.min(parseInt(params.get('CR')), 20),
+        CS: Math.min(parseInt(params.get('CS')), 20),
+        AS: Math.min(parseInt(params.get('AS')), 20)
+      };
+
+      function drawGraph() {
+        const canvas = document.getElementById('graph-canvas');
+        const ctx = canvas.getContext('2d');
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 2;
+        ctx.font = '18px Arial';
+
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 3;
+        const scale = 9; // Adjust scale
+        const maxOffset = 20 * scale;
+
+        // Draw axes
+        ctx.beginPath();
+        ctx.moveTo(centerX - maxOffset, centerY);
+        ctx.lineTo(centerX + maxOffset, centerY);
+        ctx.moveTo(centerX, centerY - maxOffset);
+        ctx.lineTo(centerX, centerY + maxOffset);
+        ctx.stroke();
+
+        // Draw tick marks
+        const ticks = [5, 10, 15];
+        ticks.forEach(tick => {
+          const offset = tick * scale;
+          // Positive X and Y ticks
+          ctx.beginPath();
+          ctx.moveTo(centerX + offset, centerY - 5);
+          ctx.lineTo(centerX + offset, centerY + 5);
+          ctx.moveTo(centerX - 5, centerY - offset);
+          ctx.lineTo(centerX + 5, centerY - offset);
+          ctx.stroke();
+          // Negative X and Y ticks
+          ctx.beginPath();
+          ctx.moveTo(centerX - offset, centerY - 5);
+          ctx.lineTo(centerX - offset, centerY + 5);
+          ctx.moveTo(centerX - 5, centerY + offset);
+          ctx.lineTo(centerX + 5, centerY + offset);
+          ctx.stroke();
+        });
+
+        // Draw arrow tips at 20
+        const arrowSize = 10;
+        const arrowOffset = 20 * scale;
+        ctx.beginPath();
+        // Positive X arrow
+        ctx.moveTo(centerX + arrowOffset, centerY);
+        ctx.lineTo(centerX + arrowOffset - arrowSize, centerY - arrowSize / 2);
+        ctx.moveTo(centerX + arrowOffset, centerY);
+        ctx.lineTo(centerX + arrowOffset - arrowSize, centerY + arrowSize / 2);
+        // Negative X arrow
+        ctx.moveTo(centerX - arrowOffset, centerY);
+        ctx.lineTo(centerX - arrowOffset + arrowSize, centerY - arrowSize / 2);
+        ctx.moveTo(centerX - arrowOffset, centerY);
+        ctx.lineTo(centerX - arrowOffset + arrowSize, centerY + arrowSize / 2);
+        // Positive Y arrow
+        ctx.moveTo(centerX, centerY - arrowOffset);
+        ctx.lineTo(centerX - arrowSize / 2, centerY - arrowOffset + arrowSize);
+        ctx.moveTo(centerX, centerY - arrowOffset);
+        ctx.lineTo(centerX + arrowSize / 2, centerY - arrowOffset + arrowSize);
+        // Negative Y arrow
+        ctx.moveTo(centerX, centerY + arrowOffset);
+        ctx.lineTo(centerX - arrowSize / 2, centerY + arrowOffset - arrowSize);
+        ctx.moveTo(centerX, centerY + arrowOffset);
+        ctx.lineTo(centerX + arrowSize / 2, centerY + arrowOffset - arrowSize);
+        ctx.stroke();
+
+        // Draw labels
+        ctx.fillText('Secuencial', centerX - 33, 30);
+        ctx.fillText('Concreto', centerX - 28, 45);
+        ctx.fillText('Secuencial', canvas.width - 100, centerY - 25);
+        ctx.fillText('Abstracto', canvas.width - 95, centerY - 10);
+        ctx.fillText('Aleatorio', centerX - 37, canvas.height - 270);
+        ctx.fillText('Abstracto', centerX - 37, canvas.height - 255);
+        ctx.fillText('Aleatorio', 12, centerY - 25);
+        ctx.fillText('Concreto', 12, centerY - 10);
+
+        const orderedPairs = [
+          { x: 0, y: categoryScores.CS * scale },
+          { x: categoryScores.AS * scale, y: 0 },
+          { x: 0, y: -categoryScores.AR * scale },
+          { x: -categoryScores.CR * scale, y: 0 }
+        ];
+
+        ctx.fillStyle = 'green';
+        orderedPairs.forEach(point => {
+          ctx.beginPath();
+          ctx.arc(centerX + point.x, centerY - point.y, 5, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        ctx.strokeStyle = 'green';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        orderedPairs.forEach((point, index) => {
+          const nextPoint = orderedPairs[(index + 1) % orderedPairs.length];
+          ctx.moveTo(centerX + point.x, centerY - point.y);
+          ctx.lineTo(centerX + nextPoint.x, centerY - nextPoint.y);
+        });
+        ctx.stroke();
+      }
+
+      drawGraph();
+
+      document.getElementById('pdf-btn').addEventListener('click', () => {
+      const canvas = document.getElementById('graph-canvas');
+      const imgData = canvas.toDataURL('image/png');
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF();
+
+    // Set font and add "Congratulations" text in the left column
+    pdf.setFont('Georgia', 'bold');
+
+    // Retrieve the user name from localStorage
+    const userName = localStorage.getItem('userName');
+
+    // If a name is found, use it; otherwise, use a default message
+    const congratulationsMessage = userName ? `¡Felicidades ${userName}!` : "Congratulations!";
+
+    // Create PDF
+    pdf.setFontSize(23);
+    pdf.text(
+      congratulationsMessage,  // Insert the dynamic message
+      15, // X position: left column
+      25  // Y position: slightly taller placement
+    );
+
+    // Set the remaining text in size 18
+    pdf.setFontSize(20);
+    pdf.text(
+      "\nSi bien puedes aprender usando cualquier método que desees, según las respuestas que elijas, el gráfico muestra si hay un estilo determinado que prefieras sobre los demás.",
+      15, // X position: left column (same as the first text)
+      25 + 10, // Y position adjusted for the next part of the text (slightly lower)
+      { maxWidth: 80 } // Narrower width for better fit, prevents text from going too far right
+    );
+
+
+
+      // Add graph image in the right column (unchanged)
+      const imgWidth = 90;
+      const imgHeight = (canvas.height / canvas.width) * imgWidth; // Maintain aspect ratio
+      pdf.addImage(
+        imgData, 'PNG',
+        110, // X position: start of the right column
+        20,  // Aligns with the "Congratulations" text
+        imgWidth, 
+        imgHeight
+      );
+
+      // Adjust paragraphs to start higher up
+      let y = 110; // Moved up approximately 9 lines
+      pdf.setFontSize(12);
+
+      const headers = [
+        { header: "Secuencial Abstracto", paragraph: "Los estudiantes secuenciales abstractos disfrutan comprendiendo ideas y conceptos. Les gusta pensar en teorías y en cómo funcionan las cosas en general. Estos niños son buenos organizando sus pensamientos y prefieren aprender mediante explicaciones y razonamientos. Es posible que disfruten leyendo sobre cómo sucedieron las cosas en la historia o aprendiendo sobre teorías científicas que explican cómo funcionan las cosas en la naturaleza." },
+        { header: "Secuencial Concreto", paragraph: "Los estudiantes concretos secuenciales les gustan las cosas que son claras y organizadas. Prefieren aprender paso a paso, siguiendo un plan u orden. Estos son los niños a quienes les va bien cuando las cosas están dispuestas de forma estructurada, como en una lista o un horario. Disfrutan de actividades en las que pueden ver cómo las cosas encajan lógicamente, como resolver problemas matemáticos en un orden determinado o seguir instrucciones para construir algo." },
+        { header: "Aleatorio Abstracto", paragraph: "Los estudiantes aleatorios abstractos son sociables y disfrutan trabajando con otros. Les gustan las actividades que involucran sentimientos y emociones. Estos niños aprenden mejor cuando pueden relacionar nueva información con sus propias experiencias o discutir ideas con amigos. Es posible que disfruten de proyectos en los que puedan expresarse creativamente o trabajar en grupos donde puedan compartir ideas y aprender unos de otros." },
+        { header: "Aleatorio Concreto", paragraph: "Los estudiantes concretos aleatorios son prácticos y les gusta probar cosas. Disfrutan aprendiendo a través de la experiencia práctica y explorando nuevas ideas. Estos son los niños que aprenden mejor haciendo experimentos, creando arte o construyendo cosas con las manos. Les gusta ver cómo funcionan las cosas en acción y disfrutan encontrando soluciones a los problemas por sí mismos." }
+      ];
+
+      headers.forEach(({ header, paragraph }) => {
+      pdf.setFont('Helvetica', 'bold'); // Use serif font for headers
+      pdf.setFontSize(16); // Adjust header font size here
+      pdf.text(header, 20, y); // Headers in bold
+      y += 10; // Add more space after the header
+
+      pdf.setFont('Helvetica', 'normal'); // Use serif font for paragraphs
+      pdf.setFontSize(12); // Adjust paragraph font size if needed
+      const paragraphHeight = pdf.getTextDimensions(paragraph, { maxWidth: 180 }).h; // Calculate paragraph height
+      pdf.text(paragraph, 10, y, { maxWidth: 180 }); // Paragraphs below headers
+      y += paragraphHeight + 10; // Add paragraph height + extra space
+    });
+
+
+    const fileName = `${userName || 'Default'} Estilo Preferido de Aprendizaje.pdf`;
+    pdf.save(fileName);
+
+    });
+
+    };
+  </script>
+</body>
+</html>
+

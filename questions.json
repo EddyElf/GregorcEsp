@@ -1,0 +1,139 @@
+{
+    "questions": [
+        {
+            "question": "Pregunta 1",
+            "choices": [
+                { "word": "IMAGINATIVO", "category": "AR", "score": 1 },
+                { "word": "INVESTIGADOR", "category": "CR", "score": 1 },
+                { "word": "REALISTA", "category": "CS", "score": 1 },
+                { "word": "ANALÍTICO", "category": "AS", "score": 1 }
+            ]
+        },
+        {
+            "question": "Pregunta 2",
+            "choices": [
+                { "word": "ORGANIZADO", "category": "CS", "score": 1 },
+                { "word": "ADAPTABLE", "category": "AR", "score": 1 },
+                { "word": "CRÍTICO", "category": "AS", "score": 1 },
+                { "word": "INQUIETANTE", "category": "CR", "score": 1 }
+            ]
+        },
+        {
+            "question": "Pregunta 3",
+            "choices": [
+                { "word": "DEBATE", "category": "AS", "score": 1 },
+                { "word": "IR AL PUNTO", "category": "CS", "score": 1 },
+                { "word": "CREANDO", "category": "CR", "score": 1 },
+                { "word": "RELACIONANDO", "category": "AR", "score": 1 }
+            ]
+        },
+        {
+            "question": "Pregunta 4",
+            "choices": [
+                { "word": "PERSONAL", "category": "AR", "score": 1 },
+                { "word": "PRÁCTICO", "category": "CS", "score": 1 },
+                { "word": "ACADÉMICO", "category": "AS", "score": 1 },
+                { "word": "AVENTURERO", "category": "CR", "score": 1 }
+            ]
+        },
+        {
+            "question": "Pregunta 5",
+            "choices": [
+                { "word": "PRECISO", "category": "CS", "score": 1 },
+                { "word": "FLEXIBLE", "category": "AR", "score": 1 },
+                { "word": "SISTEMÁTICO", "category": "AS", "score": 1 },
+                { "word": "INVENTIVO", "category": "CR", "score": 1 }
+            ]
+        },
+        {
+            "question": "Pregunta 6",
+            "choices": [
+                { "word": "COMPARTIENDO", "category": "AR", "score": 1 },
+                { "word": "ORDENADO", "category": "CS", "score": 1 },
+                { "word": "SENSATO", "category": "AS", "score": 1 },
+                { "word": "INDEPENDIENTE", "category": "CR", "score": 1 }
+            ]
+        },
+        {
+            "question": "Pregunta 7",
+            "choices": [
+                { "word": "COMPETITIVO", "category": "CR", "score": 1 },
+                { "word": "PERFECCIONISTA", "category": "CS", "score": 1 },
+                { "word": "COOPERATIVO", "category": "AR", "score": 1 },
+                { "word": "LÓGICO", "category": "AS", "score": 1 }
+            ]
+        },
+        {
+            "question": "Pregunta 8",
+            "choices": [
+                { "word": "INTELECTUAL", "category": "AS", "score": 1 },
+                { "word": "SENSIBLE", "category": "AR", "score": 1 },
+                { "word": "TRABAJADOR", "category": "CS", "score": 1 },
+                { "word": "ARRIESGADO", "category": "CR", "score": 1 }
+            ]
+        },
+        {
+            "question": "Pregunta 9",
+            "choices": [
+                { "word": "LECTOR", "category": "AS", "score": 1 },
+                { "word": "PERSONA SOCIAL", "category": "AR", "score": 1 },
+                { "word": "RESOLVEDOR DE PROBLEMAS", "category": "CR", "score": 1 },
+                { "word": "PLANIFICADOR", "category": "CS", "score": 1 }
+            ]
+        },
+        {
+            "question": "Pregunta 10",
+            "choices": [
+                { "word": "MEMORIZAR", "category": "CS", "score": 1 },
+                { "word": "ASOCIAR", "category": "AR", "score": 1 },
+                { "word": "REFLEXIONAR", "category": "AS", "score": 1 },
+                { "word": "ORIGINAR", "category": "CR", "score": 1 }
+            ]
+        },
+        {
+            "question": "Pregunta 11",
+            "choices": [
+                { "word": "CAMBIADOR", "category": "CR", "score": 1 },
+                { "word": "JUZGADOR", "category": "AS", "score": 1 },
+                { "word": "ESPONTÁNEO", "category": "AR", "score": 1 },
+                { "word": "LE GUSTAN LAS DIRECCIONES", "category": "CS", "score": 1 }
+            ]
+        },
+        {
+            "question": "Pregunta 12",
+            "choices": [
+                { "word": "COMUNICANDO", "category": "AR", "score": 1 },
+                { "word": "DESCUBRIENDO", "category": "CR", "score": 1 },
+                { "word": "CAUTELOSO", "category": "CS", "score": 1 },
+                { "word": "RAZONANDO", "category": "AS", "score": 1 }
+            ]
+        },
+        {
+            "question": "Pregunta 13",
+            "choices": [
+                { "word": "DESAFIANTE", "category": "CR", "score": 1 },
+                { "word": "PRACTICANDO", "category": "CS", "score": 1 },
+                { "word": "CUIDADOSO", "category": "AR", "score": 1 },
+                { "word": "EXAMINANDO", "category": "AS", "score": 1 }
+            ]
+        },
+        {
+            "question": "Pregunta 14",
+            "choices": [
+                { "word": "COMPLETANDO EL TRABAJO", "category": "CS", "score": 1 },
+                { "word": "VIRANDO LAS POSIBILIDADES", "category": "CR", "score": 1 },
+                { "word": "OBTENIENDO IDEAS", "category": "AS", "score": 1 },
+                { "word": "INTERPRETANDO", "category": "AR", "score": 1 }
+            ]
+        },
+        {
+            "question": "Pregunta 15",
+            "choices": [
+                { "word": "HACIENDO", "category": "CS", "score": 1 },
+                { "word": "SINTIENDO", "category": "AR", "score": 1 },
+                { "word": "PENSANDO", "category": "AS", "score": 1 },
+                { "word": "EXPERIMENTANDO", "category": "CR", "score": 1 }
+            ]
+        }
+    ]
+}

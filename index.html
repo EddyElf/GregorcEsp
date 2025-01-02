@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image and Text Layout</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Welcome Screen Section -->
+  <div id="welcome-screen" class="container">
+    <div class="welcome-text">
+      <h1>¡Bienvenidos al Cuestionario!</h1>
+      <p>Este breve cuestionario le ayudará a demostrar<br>cómo le gusta aprender.</p>
+      <p>Por favor ingrese su nombre para comenzar.</p>
+      <input type="text" id="user-name" placeholder="Ingresa Tu Nombre" />
+      <button id="enter-btn">Ingresa</button>
+    </div>
+  </div>
+
+  <!-- Quiz Screen Section (Initially Hidden) -->
+  <div id="quiz-screen" class="container-quiz" style="display: none;">
+    <div class="row row-2cols" style="top: 180px; left: 45px;">
+      <div class="column-left">
+        <img src="Uncheck.png" class="checkbox uncheck-image" alt="checkbox1" />
+        <img src="Check.png" class="checkbox check-image" style="opacity: 0;" alt="checkbox1" />
+      </div>
+      <div class="column-right" id="row1-text"></div>
+    </div>
+    
+
+    <div class="row row-2cols" style="top: 270px; left: 45px;">
+      <div class="column-left">
+        <img src="Uncheck.png" class="checkbox uncheck-image" alt="checkbox2" />
+        <img src="Check.png" class="checkbox check-image" style="opacity: 0;" alt="checkbox2" />
+      </div>
+      <div class="column-right" id="row2-text"></div>
+    </div>
+
+    <div class="row row-2cols" style="top: 360px; left: 45px;">
+      <div class="column-left">
+        <img src="Uncheck.png" class="checkbox uncheck-image" alt="checkbox3" />
+        <img src="Check.png" class="checkbox check-image" style="opacity: 0;" alt="checkbox3" />
+      </div>
+      <div class="column-right" id="row3-text"></div>
+    </div>
+
+    <div class="row row-2cols" style="top: 450px; left: 45px;">
+      <div class="column-left">
+        <img src="Uncheck.png" class="checkbox uncheck-image" alt="checkbox4" />
+        <img src="Check.png" class="checkbox check-image" style="opacity: 0;" alt="checkbox4" />
+      </div>
+      <div class="column-right" id="row4-text"></div>
+    </div>
+
+    <div class="row row-1col" style="top: 540px; left: 45px;">
+      <button id="enter-btn-quiz">Ingresa</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      let selectedAnswers = [];
+      let currentQuestionIndex = 0;
+      let questions = [];
+
+      // Initialize category scores
+      let categoryScores = {
+        AR: 1, // Abstract Random
+        CR: 1, // Concrete Random
+        CS: 1, // Concrete Sequential
+        AS: 1  // Abstract Sequential
+      };
+
+      // Load sound files
+      const dingSound = new Audio('ding.mp3');
+      const nowantSound = new Audio('nowant.mp3');
+      const enterSound = new Audio('enter.mp3');
+
+      // Fetch the questions
+      fetch('questions.json')
+        .then(response => response.json())
+        .then(data => {
+          questions = data.questions;
+          shuffleArray(questions); // Shuffle question order
+          questions.forEach(question => shuffleArray(question.choices)); // Shuffle choices
+          loadQuestion(currentQuestionIndex);
+        })
+        .catch(error => console.error('Error loading questions:', error));
+
+      // Load question based on index
+      function loadQuestion(index) {
+        if (index >= questions.length) {
+          document.getElementById('enter-btn-quiz').disabled = true;
+
+          // Clear the text fields
+          document.getElementById('row1-text').innerText = '';
+          document.getElementById('row2-text').innerText = '';
+          document.getElementById('row3-text').innerText = '';
+          document.getElementById('row4-text').innerText = '';
+
+          // Show Check.png images in all rows
+          document.querySelectorAll('.check-image').forEach(img => img.style.opacity = "1");
+
+          // Highlight all text fields in all rows
+          document.querySelectorAll('.column-right').forEach(col => col.classList.add('highlighted'));
+
+          // Open the graph in a new window and pass the category scores
+          const params = new URLSearchParams(categoryScores).toString();
+          window.open(`graph.html?${params}`, 'Graph', 'width=600,height=600');
+
+          return;
+        }
+
+        const question = questions[index];
+
+        // Assign words to rows and dynamically set category and score on each word element
+        document.getElementById('row1-text').innerText = question.choices[0].word;
+        document.getElementById('row1-text').dataset.category = question.choices[0].category;
+        document.getElementById('row1-text').dataset.score = question.choices[0].score;
+
+        document.getElementById('row2-text').innerText = question.choices[1].word;
+        document.getElementById('row2-text').dataset.category = question.choices[1].category;
+        document.getElementById('row2-text').dataset.score = question.choices[1].score;
+
+        document.getElementById('row3-text').innerText = question.choices[2].word;
+        document.getElementById('row3-text').dataset.category = question.choices[2].category;
+        document.getElementById('row3-text').dataset.score = question.choices[2].score;
+
+        document.getElementById('row4-text').innerText = question.choices[3].word;
+        document.getElementById('row4-text').dataset.category = question.choices[3].category;
+        document.getElementById('row4-text').dataset.score = question.choices[3].score;
+
+        // Reset checkbox states
+        document.querySelectorAll('.check-image').forEach(img => img.style.opacity = "0");
+        document.querySelectorAll('.uncheck-image').forEach(img => img.style.opacity = "1"); // Ensure Uncheck.png is visible
+        selectedAnswers = [];
+        // Remove highlights from previous row text fields
+        document.querySelectorAll('.column-right').forEach(col => col.classList.remove('highlighted'));
+      }
+
+      // Handle checkbox click events
+      document.querySelectorAll('.check-image').forEach(checkImg => {
+        checkImg.addEventListener('click', function () {
+          const uncheckImg = this.previousElementSibling; // Get associated Uncheck image
+          if (!uncheckImg) {
+            return; // Exit if no sibling found
+          }
+
+          if (this.style.opacity === "0") {
+            toggleCheckbox(uncheckImg, this, true); // Mark as selected
+            dingSound.play(); // Play sound when selected
+          } else {
+            toggleCheckbox(uncheckImg, this, false); // Mark as unselected
+            nowantSound.play(); // Play sound when unselected
+          }
+        });
+      });
+
+      function toggleCheckbox(uncheckImage, checkImage, isSelected) {
+        const choice = uncheckImage.alt; // The checkbox identifier (row1, row2, etc.)
+        const rowId = `row${choice.charAt(choice.length - 1)}-text`; // The corresponding row ID
+        const rowTextField = document.getElementById(rowId); // Get the corresponding text field
+        const word = rowTextField.innerText; // Get the word associated with the text field
+
+        // Get the category and score directly from the word element's dataset
+        const category = rowTextField.dataset.category;
+        const score = parseInt(rowTextField.dataset.score); // Ensure this is a number
+
+        // Debugging logs to check if category and score are being fetched correctly
+        console.log(`Word: ${word}, Category: ${category}, Score: ${score}`);
+
+        if (isSelected) {
+            checkImage.style.opacity = "1"; // Show Check.png
+            uncheckImage.style.opacity = "0"; // Hide Uncheck.png
+            rowTextField.classList.add("highlighted"); // Highlight text field
+            selectedAnswers.push({ word, category, score }); // Store word, category, and score in selectedAnswers
+        } else {
+            checkImage.style.opacity = "0"; // Hide Check.png
+            uncheckImage.style.opacity = "1"; // Show Uncheck.png
+            rowTextField.classList.remove("highlighted"); // Remove highlight
+            selectedAnswers = selectedAnswers.filter(answer => answer.word !== word); // Remove the deselected word
+        }
+    }
+
+    document.getElementById('enter-btn-quiz').addEventListener('click', function () {
+    // Check if exactly 2 answers are selected
+    if (selectedAnswers.length !== 2) {
+        nowantSound.play();
+        dingSound.play(); // Play error sound if incorrect number of answers selected
+        alert('Por favor, seleccione exactamente 2 respuestas.');
+    } else {
+        // Log the selected answers to verify they are correct
+        console.log('Selected Answers:', selectedAnswers);
+
+        // Log categoryScores before the update to track changes
+        console.log('Category Scores Before Update:', JSON.parse(JSON.stringify(categoryScores)));
+
+        // Update category scores based on selected answers
+        selectedAnswers.forEach(answer => {
+            const { word, category, score } = answer; // Destructure the answer to get word, category, and score
+
+            // Ensure the score is a number
+            console.log('Selected score:', score);
+
+            // Ensure the category exists in categoryScores and add the score
+            if (category && categoryScores[category] !== undefined) {
+                categoryScores[category] += score; // Add score from the selected choice
+            } else {
+                console.error(`Invalid category: ${category}`); // Log error if category is invalid
+            }
+        });
+
+        // Log categoryScores after the update to confirm changes
+        console.log('Category Scores After Update:', JSON.parse(JSON.stringify(categoryScores)));
+
+        // Play the enter sound
+        enterSound.play();
+
+        // Move to the next question
+        currentQuestionIndex++; 
+        loadQuestion(currentQuestionIndex); // Load the next question
+    }
+});
+
+
+    // Handle Welcome Screen Enter button click
+    document.getElementById('enter-btn').addEventListener('click', function () {
+      const userName = document.getElementById('user-name').value;
+      if (!userName) {
+        alert('Por favor ingrese su nombre.');
+      } else {
+        // Save the user name to localStorage
+        localStorage.setItem('userName', userName);
+
+        // Hide the welcome screen and show quiz screen
+        enterSound.play();
+        document.getElementById('welcome-screen').style.display = 'none';
+        document.getElementById('quiz-screen').style.display = 'block';
+      }
+    });
+
+      // Shuffle array function for randomizing question order
+      function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+      }
+    });
+
+  </script>
+
+</body>
+</html>

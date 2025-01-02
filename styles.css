@@ -1,0 +1,200 @@
+/* Set the overall page background to black */
+body {
+    background-color: black;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+}
+
+/* Container for the Welcome Screen (no background image here) */
+#welcome-screen {
+    position: absolute;  /* Changed from relative to absolute */
+    top: 10%;  /* Move the welcome screen nearer to the top */
+    left: 5%;
+    width: 500px;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+/* Welcome screen styling */
+#welcome-screen .welcome-text {
+    text-align: center;
+    color: gray;
+}
+
+#welcome-screen h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+#welcome-screen p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+/* Style for the input label text (black) */
+#welcome-screen label {
+    color: #f9f9f9; /* Black color for the input prompt */
+}
+
+#welcome-screen input {
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    width: 80%;
+    border: 2px solid #b7c916;
+    background-color: gray; /* Changed background color */
+    color: black;
+}
+
+#welcome-screen button {
+    padding: 10px 30px;
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: black;
+    color: gray;
+    border: 2px solid gray;
+    cursor: pointer;
+}
+
+#welcome-screen button:hover {
+    background-color: #b7c916;
+    color: black;
+}
+
+/* Quiz screen container with background */
+.container-quiz {
+    position: relative;
+    width: 500px;
+    height: 700px;
+    background-image: url('Background.png');
+    background-size: cover;
+    background-position: top left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Hide the quiz screen initially */
+#quiz-screen {
+    display: none;
+}
+
+/* Style for rows */
+.row {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    box-sizing: border-box;
+}
+
+.row-2cols {
+    height: 90px;
+}
+
+/* Style for checkbox images */
+.column-left {
+    width: 90px;
+    height: 100%;
+    background-size: cover;
+    background-image: url('Uncheck.png');
+    position: relative;
+}
+
+/* Style for checkbox images */
+.column-left img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+}
+
+/* Initially hidden 'Check.png' image */
+.check-image {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Right column style for answer text */
+.column-right {
+    width: 275px;
+    height: 100%;
+    background-color: #9f9f9f;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: -9px;
+    border: 9px solid black;
+}
+
+/* Style for the Enter button */
+.row-1col {
+    height: 90px;
+    width: 408px;
+    background-color: black;
+    color: gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+}
+
+#enter-btn {
+    background-color: black;
+    color: gray;
+    border: 2px solid gray;
+    padding: 10px 90px;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+#enter-btn:hover {
+    background-color: #b7c916;
+    color: black;
+}
+
+/* Style for the Quiz Enter button */
+#enter-btn-quiz {
+    background-color: black;
+    color: gray;
+    border: 2px solid gray;
+    padding: 10px 90px; /* Increased padding */
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 20px; /* Increased font size */
+}
+
+#enter-btn-quiz:hover {
+    background-color: #b7c916;
+    color: black;
+}
+
+/* Added transitions to smooth the opacity changes for checkbox images */
+.column-left img {
+    transition: opacity 0.3s ease;
+}
+
+/* CSS to highlight the text field when a checkbox is selected */
+.highlighted {
+    background-color: #b7c916; /* Light yellow background for highlighting */
+  }
